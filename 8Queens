@@ -1,0 +1,97 @@
+#include <iostream>
+bool NQueens(int board[8][8],int current_placement, int current_row);
+void markSafes(int board[8][8], int x, int y);
+void markUnsafes(int board[8][8], int x, int y);
+void update(int board[8][8]);
+
+int main() {
+    int board[8][8];
+    for (int i = 0;i < 8;++i){
+        for(int j = 0;j < 8;++j){
+            board[i][j] = 0;
+        }
+    }
+    NQueens(board,0,0);
+    return 0;
+}
+bool NQueens(int board[8][8],int current_placement, int current_row){
+    if (current_placement == 8){
+        for (int i = 0;i < 8;++i){
+            for (int j = 0;j < 8;++j){
+                if (board[i][j] == 1)
+                    std::cout <<  '|' << 'Q';
+                else
+                    std::cout << '|' << ' ';
+            }
+            std::cout << '|' << '\n';
+        }
+        return true;
+    }
+    else{
+        for (int i = 0;i < 8;++i){
+            if(board[current_row][i] == 0){
+                markUnsafes(board,current_row,i);
+                board[current_row][i] = 1;
+                if (NQueens(board, current_placement + 1,current_row + 1)){
+                    return true;
+                }
+                board[current_row][i] = 0;
+                markSafes(board,current_row,i);
+                update(board);
+            }
+        }
+        return false;
+    }
+}
+void update(int board[8][8]){
+    for (int i = 0;i < 8;++i){
+        for (int j = 0;j < 8;++j){
+            if (board[i][j] == 1){
+                markUnsafes(board,i,j);
+                board[i][j] = 1;
+            }
+        }
+    }
+}
+void markSafes(int board[8][8], int x, int y){
+    for (int i = 0;i < 8;++i){
+        board[x][i] = 0;
+    }
+    for (int i = 0;i < 8;++i){
+        board[i][y] = 0;
+    }
+    for (int i = x, j = y; j < 8 && i < 8;++i,++j){
+        board[i][j] = 0;
+    }
+    for (int i = x,j = y; i > -1 && j > -1;--i,--j){
+        board[i][j] = 0;
+    }
+    for (int i = x,j = y;i > -1 && j < 8;--i, ++j){
+        board[i][j] = 0;
+    }
+    for (int i = x, j = y; i < 8 && j > -1; ++i,--j){
+        board[i][j] = 0;
+    }
+}
+
+void markUnsafes(int board[8][8], int x, int y){
+    for (int i = 0;i < 8;++i){
+        board[x][i] = -1;
+    }
+    for (int i = 0;i < 8;++i){
+        board[i][y] = -1;
+    }
+    for (int i = x, j = y; j < 8 && i < 8;++i,++j){
+        board[i][j] = -1;
+    }
+    for (int i = x,j = y; i > -1 && j > -1;--i,--j){
+        board[i][j] = -1;
+    }
+    for (int i = x,j = y;i > -1 && j < 8;--i, ++j){
+        board[i][j] = -1;
+    }
+    for (int i = x, j = y; i < 8 && j > -1; ++i,--j){
+        board[i][j] = -1;
+    }
+}
+
